@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Definitions id="idvalue0" targetNamespace="http://www.example.com/tosca/ServiceTemplates/YCSB_Cassandra"
+             xmlns:ns1="http://www.example.com/tosca/Types/CELAR"
+             xmlns:tosca="http://docs.oasis-open.org/tosca/ns/2011/12"
+             xmlns:xml="http://www.w3.org/XML/1998/namespace"
+             xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+             xsi:schemaLocation="http://docs.oasis-open.org/tosca/ns/2011/12 TOSCA-v1.0.xsd ">
+    <ServiceTemplate id="YCSB_Cassandra_Service">
+        <TopologyTemplate>
+            <NodeTemplate type="ns1:YCSBApplication" id="YCSBApplicationTemplate"></NodeTemplate>
+            <NodeTemplate type="ns1:VirtualMachine" id="YCSBUbuntuVM"
+                          maxInstances="1">
+                <DeploymentArtifacts>
+                    <DeploymentArtifact name="YCSBUbuntuImage"
+                                        artifactType="ns1:VMIArtifact" artifactRef="YCSBUbuntuVM">
+                    </DeploymentArtifact>
+                </DeploymentArtifacts>
+            </NodeTemplate>
+            <NodeTemplate id="YCSBNodeTemplate" type="ns1:YCSBNode"
+                          maxInstances="3">
+            </NodeTemplate>
+            <RelationshipTemplate type="QName" id="YCSBApplication_HosteOn_YCSBUbuntuVM">
+                <SourceElement ref="YCSBApplicationTemplate"/>
+                <TargetElement ref="YCSBUbuntuVM"/>
+            </RelationshipTemplate>
+            <RelationshipTemplate type="ns1:HostedOn" id="YCSBUbuntuVM_HostedOn_YCSBNode">
+                <SourceElement ref="YCSBUbuntuVM"/>
+                <TargetElement ref="YCSBNodeTemplate"/>
+            </RelationshipTemplate>
+            <NodeTemplate type="ns1:JavaModule"
+                          id="YCSBJavaModule"><!--Added by c-Eclipse (or by SALSA).--></NodeTemplate>
+            <RelationshipTemplate type="ns1:HostedOn" id="YCSBJava_HostedOn_YCSBNodeTemplate">
+                <SourceElement ref="YCSBJavaModule"/>
+                <TargetElement
+                        ref="YCSBNodeTemplate"></TargetElement><!--Added by c-Eclipse (or by SALSA).-->
+            </RelationshipTemplate>
+            <NodeTemplate type="ns1:CassandraSeedNode"
+                          id="CassandraSeed" maxInstances="1">
+            </NodeTemplate>
+            <NodeTemplate type="ns1:CassandraNode" id="CassandraNode"
+                          maxInstances="5">
+            </NodeTemplate>
+
+
+            <RelationshipTemplate type="ns1:DependsOn" id="YCSB_DependsOn_Cassandra">
+                <SourceElement ref="YCSBNodeTemplate"/>
+                <TargetElement ref="CassandraSeed"/>
+            </RelationshipTemplate>
+
+        </TopologyTemplate>
+    </ServiceTemplate>
+    <NodeTypeImplementation nodeType="ns1:YCSBApplication" name="YCSBApplicationImplementation">
+        <ImplementationArtifacts>
+            <ImplementationArtifact
+                    artifactType="ns1:ScriptArtifact" interfaceName="lifecycle"
+                    operationName="install" artifactRef="YCSBInstallationScript">
+            </ImplementationArtifact>
+        </ImplementationArtifacts>
+    </NodeTypeImplementation>
+    <ArtifactTemplate type="ns1:VMIArtifact" id="YCSBUbuntuOS">
+        <ArtifactReferences>
+            <ArtifactReference reference="VMI/YCSBUbuntuVM"></ArtifactReference>
+        </ArtifactReferences>
+    </ArtifactTemplate>
+    <ArtifactTemplate type="ns1:ScriptArtifact" id="YCSBInstallationScript">
+        <ArtifactReferences>
+            <ArtifactReference reference="Scripts/YCSB_Client.sh"></ArtifactReference>
+        </ArtifactReferences>
+    </ArtifactTemplate>
+
+
+</Definitions>
