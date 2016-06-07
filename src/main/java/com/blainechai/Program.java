@@ -1,10 +1,5 @@
 package com.blainechai;
 
-import com.blainechai.model.Node;
-
-import java.util.ArrayList;
-import java.util.Map;
-
 /**
  * Created by blainechai on 2016. 4. 12..
  */
@@ -13,37 +8,38 @@ import java.util.Map;
 public class Program {
 
     public static void main(String[] args) {
-        YamlParser parser = new YamlParser();
+        ToscaParser parser = new ToscaParser(Constants.TOSCA_FILE_PATH + Constants.TOSCA_FILE_NAME);
 
-        parser.getToscaFile(Constants.TOSCA_FILE_PATH + "wordpress_server.yaml");
-        parser.getNodeTemplete(YamlParser.map);
+        System.out.println(parser.inputs);
+//        ChefUtil chef = new ChefUtil();
 
-        ArrayList<Node> nodes = new ArrayList<Node>();
-        ArrayList<Node> nodes2 = new ArrayList<Node>();
-        parser.getParentNodeByKey(YamlParser.map, "type", null, nodes);
+//        parser.getToscaFile(Constants.TOSCA_FILE_PATH + "wordpress_server.yaml");
+//        parser.setNodeTemplate(ToscaParser.map);
+
+//        ArrayList<Node> nodes = new ArrayList<Node>();
+//        ArrayList<Node> nodes2 = new ArrayList<Node>();
+//        parser.getParentNodeByKey(YamlParser.map, "type", null, nodes);
 //        System.out.println(parser.getNodeByKey(YamlParser.map, "type"));
 
-//        parser.getNodeTemplete(YamlParser.map);
-        System.out.println(nodes);
-        System.out.println();
+//        parser.setNodeTemplate(YamlParser.map);
+//        System.out.println(nodes);
+//        System.out.println();
 
-        for (Node node : nodes) {
-            System.out.println(node.getAttribute());
-        }
+//        for (Node node : nodes) {
+//            System.out.println(node.getAttribute());
+//        }
 
-        System.out.println();
-        parser.getNodeByKey(YamlParser.map, "mysql_dbms", nodes2);
-        for (Node node : nodes2) {
+//        System.out.println();
+//        parser.getNodeByKey(YamlParser.map, "mysql_dbms", nodes2);
+        /*for (Node node : nodes2) {
             System.out.println(node.getAttribute());
             System.out.println(node.keySet());
-        }
+        }*/
 
+//        System.out.println("!!!!!!!!!!!!!!!" + parser.nodeTemplate.keySet());
+//        System.out.println(parser.nodeTemplate);
 
-        for (Object key : parser.nodeTemplate.keySet()){
-            System.out.println(parser.nodeTemplate.get(key));
-        }
-
-//        parser.getNodeTemplete()
+        ChefUtil.createCookbooks(parser);
     }
 
 }

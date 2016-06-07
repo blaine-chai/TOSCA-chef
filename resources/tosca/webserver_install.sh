@@ -1,2 +1,2 @@
-yum -y install httpd
-systemctl enable httpd.service
+apt-get update
+apt-get install -yy apache2

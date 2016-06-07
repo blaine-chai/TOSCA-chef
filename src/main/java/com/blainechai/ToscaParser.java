@@ -12,23 +12,55 @@ import java.util.*;
 
 
 @SuppressWarnings("unchecked")
-public class YamlParser {
+public class ToscaParser {
 
     public ToscaInputs inputs = new ToscaInputs();
-    public TopologyTemplete topologyTemplete = new TopologyTemplete();
+    //    public TopologyTemplete topologyTemplete = new TopologyTemplete();
     public NodeTemplate nodeTemplate = new NodeTemplate();
     public static Map map;
 
-    public void getToscaFile(String filePath) {
+    public ToscaParser(String filePath) {
         Yaml yaml = new Yaml();
-
         try {
             FileInputStream fileInputStream = new FileInputStream(filePath);
             map = (Map) yaml.load(fileInputStream);
+
+
         } catch (IOException e) {
             e.printStackTrace();
         }
+        this.setNodeTemplate(map);
+        this.setInputs(map);
+//        sout
     }
+
+    //get topology_templates's input
+    public void setInputs(Map node) {
+        for (Object subValueKey : node.keySet()) {
+            if (node.get(subValueKey) != null
+                    && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
+                if (((String) subValueKey).equals("inputs")) {
+//                    Object nodeTempateNode = node.get(subValueKey);
+                    for (Object key : ((Map) node.get(subValueKey)).keySet()) {
+                        inputs.put(key, ((Map) node.get(subValueKey)).get(key));
+//                        System.out.println(values);
+                    }
+                    break;
+                }
+                setInputs((Map) node.get(subValueKey));
+            }
+        }
+    }
+
+//    public void getToscaFile(String filePath) {
+//        Yaml yaml = new Yaml();
+//        try {
+//            FileInputStream fileInputStream = new FileInputStream(filePath);
+//            map = (Map) yaml.load(fileInputStream);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//    }
 
     public void traverse(String filePath) {
         Yaml yaml = new Yaml();
@@ -38,15 +70,15 @@ public class YamlParser {
             map = (Map) yaml.load(fileInputStream);
 //            getInfo(map);
 
-            getNodeTemplete(map);
+            setNodeTemplate(map);
 //            new Thread(new Runnable() {
 //                public void run() {
-//                    getNodeTemplete(map);
+//                    setNodeTemplate(map);
 ////                    System.out.println(nodeTemplate.keySet());
 //                }
 //            }).start();
 //
-////            getNodeTemplete(map);
+////            setNodeTemplate(map);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -76,33 +108,34 @@ public class YamlParser {
 //        return topologyTemplete;
     }
 
+    public void getInputs() {
 
-    public void getNodeTemplete(Map node) {
+    }
+
+    private void setNodeTemplate(Map node) {
         for (Object subValueKey : node.keySet()) {
             if (node.get(subValueKey) != null
                     && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
                 if (((String) subValueKey).equals("node_templates")) {
 //                    Object nodeTempateNode = node.get(subValueKey);
-                    for (Object values : ((Map) node.get(subValueKey)).keySet()) {
-                        nodeTemplate.put(values, ((Map) node.get(subValueKey)).get(subValueKey));
+                    for (Object key : ((Map) node.get(subValueKey)).keySet()) {
+                        nodeTemplate.put(key, ((Map) node.get(subValueKey)).get(key));
 //                        System.out.println(values);
                     }
                     break;
                 }
-                getNodeTemplete((Map) node.get(subValueKey));
+                setNodeTemplate((Map) node.get(subValueKey));
             }
         }
     }
 
-    public ArrayList<Node> getParentNodeByKey(Map node, String key, String parentKey, ArrayList maps) {
+    public static ArrayList<Node> getParentNodeByKey(Map node, String key, String parentKey, ArrayList maps) {
         for (Object subValueKey : node.keySet()) {
             if (((String) subValueKey).equals(key)) {
-
                 maps.add(new Node(node, (String) parentKey));
             }
             if (node.get(subValueKey) != null
                     && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
-//                System.out.println(subValueKey);
                 getParentNodeByKey((Map) node.get(subValueKey), key, (String) subValueKey, maps);
             }
 
@@ -110,26 +143,46 @@ public class YamlParser {
         return maps;
     }
 
-    public boolean isLeafNode(Map curNode) {
-        return LinkedHashMap.class.getName().equals(curNode.getClass().getName());
+    public static boolean isLeafNode(Object curNode) {
+        return !(LinkedHashMap.class.getName().equals(curNode.getClass().getName()) || Node.class.getName().equals(curNode.getClass().getName()));
     }
 
-    public ArrayList<Node> getNodeByKey(Map node, String key, ArrayList maps) {
+
+    public static ArrayList getNodeByKey(Map node, String key) {
+        ArrayList nodeList = new ArrayList();
         for (Object subValueKey : node.keySet()) {
             if (((String) subValueKey).equals(key)) {
-                maps.add(new Node((Map) node.get(key), (String) key));
+                if (!isLeafNode(node.get(key)))
+                    nodeList.add(new Node((Map) node.get(key), (String) key));
+                else
+                    nodeList.add(node.get(key));
             }
             if (node.get(subValueKey) != null
                     && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
 //                System.out.println(subValueKey)
-                getNodeByKey((Map) node.get(subValueKey), key, maps);
+                getNodeByKey((Map) node.get(subValueKey), key, nodeList);
             }
 
         }
-        return maps;
+        return nodeList;
     }
 
-    public 
+    private static ArrayList getNodeByKey(Map node, String key, ArrayList nodeList) {
+        for (Object subValueKey : node.keySet()) {
+            if (((String) subValueKey).equals(key)) {
+                if (!isLeafNode(node.get(key)))
+                    nodeList.add(new Node((Map) node.get(key), (String) key));
+                else
+                    nodeList.add(node.get(key));
+            }
+            if (node.get(subValueKey) != null
+                    && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
+                getNodeByKey((Map) node.get(subValueKey), key, nodeList);
+            }
+
+        }
+        return nodeList;
+    }
 
     public void sortByDependency() {
 
