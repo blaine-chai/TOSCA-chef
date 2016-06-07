@@ -1,3 +1,3 @@
-yum -y install mysql mysql-server
+apt-get install -yy mysql-server
 # Use systemd to start MySQL server at system boot time
-systemctl enable mysqld.service
+service mysql start

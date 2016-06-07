@@ -1,1 +1,2 @@
-yum -y install wordpress
+apt-get update
+apt-get install -yy wordpress
