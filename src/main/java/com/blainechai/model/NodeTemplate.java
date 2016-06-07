@@ -6,7 +6,7 @@ import java.util.Map;
 /**
  * Created by blainechai on 2016. 5. 25..
  */
-public class NodeTemplete extends LinkedHashMap{
+public class NodeTemplate extends LinkedHashMap{
     private Map data;
 
     private String nodeName;
@@ -16,7 +16,7 @@ public class NodeTemplete extends LinkedHashMap{
     private String interfaces;
     private String capabilities;
 
-    public NodeTemplete() {
+    public NodeTemplate() {
         this.data = new LinkedHashMap();
     }
 
