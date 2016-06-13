@@ -1,2 +1,2 @@
-apt-get update
+#sudo apt-get update
 apt-get install -yy wordpress

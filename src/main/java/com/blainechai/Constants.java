@@ -12,5 +12,6 @@ public final class Constants {
     final static String CHEF_COOKBOOKS_DEFAULT_FILE_PATH = "files/default/";
     final static String NODE_URL = "192.168.56.102";
     final static String NODE_NAME = "example";
+    final static String NODE_CHEF_REPO_PATH = "/etc/chef/";
 //    final static String CHEF_SERVER_URL= "files.default/";
 }

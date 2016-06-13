@@ -14,7 +14,6 @@ public class Program {
         ChefUtil.addInterface(parser);
         ChefUtil.uploadCookbooks();
         ChefUtil.bootstrap(Constants.NODE_NAME, Constants.NODE_URL, parser);
-
     }
 
 }

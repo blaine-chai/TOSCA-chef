@@ -66,15 +66,6 @@ public class ChefUtil {
     public static void createCookbooks(ToscaParser parser) {
         for (Object key : parser.nodeTemplate.keySet()) {
             ArrayList tmpList = ToscaParser.getNodeByKey((Map) parser.nodeTemplate.get(key), "type");
-//            Thread tx = new Thread(new Runnable() {
-//                @Override
-//                public void run() {
-//                    for(int i=0;i<100;i++){
-//                        System.out.println(i);
-//                    }
-//                }
-//            });
-//            tx.start();
             if (!tmpList.isEmpty()) {
                 if (ToscaParser.isLeafNode(tmpList.get(0)) && !tmpList.get(0).equals("Compute")) {
 //                    Thread t = new Thread(new Runnable() {
@@ -97,17 +88,6 @@ public class ChefUtil {
     public static void addInterface(ToscaParser parser) {
         for (Object key : parser.nodeTemplate.keySet()) {
             ArrayList interfaces = ToscaParser.getNodeByKey((Map) parser.nodeTemplate.get(key), "interfaces");
-//            OnSelected onSelected = new OnSelected() {
-//                @Override
-//                public void onSelectedAction(String src, String target) {
-//                    try {
-//                        copyFile(new File(src), new File(target));
-//                    } catch (Exception e) {
-//                        e.printStackTrace();
-//                    }
-//                }
-//            };
-
             if (!interfaces.isEmpty()) {
                 try {
                     FileWriter fileWriter = new FileWriter(Constants.CHEF_COOKBOOKS_PATH + key + "/" + "recipes/default.rb");
@@ -135,11 +115,22 @@ public class ChefUtil {
                 try {
                     copyFile(Constants.TOSCA_FILE_PATH + (String) node.get(subValueKey), Constants.CHEF_COOKBOOKS_PATH + key + "/" + Constants.CHEF_COOKBOOKS_DEFAULT_FILE_PATH + (String) node.get(subValueKey));
                     FileWriter fileWriter = new FileWriter(Constants.CHEF_COOKBOOKS_PATH + key + "/" + "recipes/default.rb", true);
-                    fileWriter.write("cookbook_file '/etc/chef/" + node.get(subValueKey) + "' do\n" +
+                    fileWriter.write("\ncookbook_file '" +
+                            Constants.NODE_CHEF_REPO_PATH +
+                            node.get(subValueKey) + "' do\n" +
                             "\tsource '" + node.get(subValueKey) + "'\n" +
                             "\taction :create\n" +
-                            "\tmode 777\n" +
+                            "\tmode '0777'\n" +
                             "end\n");
+                    fileWriter.write("\nexecute '" +
+                            key + "_" + subValueKey +
+                            "' do\n" +
+                            "\tcommand '/bin/bash " +
+                            Constants.NODE_CHEF_REPO_PATH +
+                            node.get(subValueKey) +
+                            "'\n" +
+                            "end\n");
+
                     fileWriter.close();
                 } catch (Exception e) {
                     e.printStackTrace();

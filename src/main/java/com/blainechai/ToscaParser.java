@@ -8,16 +8,13 @@ import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.LinkedHashMap;
-import java.util.Map;
+import java.util.*;
 
 
 @SuppressWarnings("unchecked")
 public class ToscaParser {
 
     public ToscaInputs inputs = new ToscaInputs();
-    //    public TopologyTemplete topologyTemplete = new TopologyTemplete();
     public NodeTemplate nodeTemplate = new NodeTemplate();
     public static Map map;
 
@@ -54,15 +51,15 @@ public class ToscaParser {
         }
     }
 
-//    public void getToscaFile(String filePath) {
-//        Yaml yaml = new Yaml();
-//        try {
-//            FileInputStream fileInputStream = new FileInputStream(filePath);
-//            map = (Map) yaml.load(fileInputStream);
-//        } catch (IOException e) {
-//            e.printStackTrace();
-//        }
-//    }
+    public void getToscaFile(String filePath) {
+        Yaml yaml = new Yaml();
+        try {
+            FileInputStream fileInputStream = new FileInputStream(filePath);
+            map = (Map) yaml.load(fileInputStream);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void traverse(String filePath) {
         Yaml yaml = new Yaml();
@@ -70,8 +67,6 @@ public class ToscaParser {
         try {
             FileInputStream fileInputStream = new FileInputStream(filePath);
             map = (Map) yaml.load(fileInputStream);
-//            getInfo(map);
-
             setNodeTemplate(map);
 //            new Thread(new Runnable() {
 //                public void run() {
@@ -187,6 +182,21 @@ public class ToscaParser {
     }
 
     public void sortByDependency() {
+        List<Map.Entry> entries =
+                new ArrayList(nodeTemplate.entrySet());
 
+        List<Map.Entry> resultEntries = new ArrayList();
+
+//        Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
+//            public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b){
+//                return a.getValue().compareTo(b.getValue());
+//            }
+//        });
+        Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+        for (Map.Entry<String, Integer> entry : entries) {
+            sortedMap.put(entry.getKey(), entry.getValue());
+        }
     }
+
+//    class
 }
