@@ -14,8 +14,8 @@ import java.util.*;
 @SuppressWarnings("unchecked")
 public class ToscaParser {
 
-    public ToscaInputs inputs = new ToscaInputs();
-    public NodeTemplate nodeTemplate = new NodeTemplate();
+    public static ToscaInputs inputs = new ToscaInputs();
+    public static NodeTemplate nodeTemplate = new NodeTemplate();
     public static Map map;
 
     public ToscaParser(String filePath) {
@@ -124,6 +124,8 @@ public class ToscaParser {
                 setNodeTemplate((Map) node.get(subValueKey));
             }
         }
+
+        sortByDependency();
     }
 
     public static ArrayList<Node> getParentNodeByKey(Map node, String key, String parentKey, ArrayList maps) {
@@ -181,21 +183,92 @@ public class ToscaParser {
         return nodeList;
     }
 
-    public void sortByDependency() {
+    private static void sortByDependency() {
+
+        class NodeWithDependency {
+            String name;
+            ArrayList<String> dependencyList = new ArrayList<>();
+
+            public NodeWithDependency(String name) {
+                this.name = name;
+            }
+
+            public NodeWithDependency(String name, ArrayList<String> dependencyList) {
+                this.name = name;
+                this.dependencyList = dependencyList;
+            }
+
+            @Override
+            public String toString() {
+                return name + dependencyList;
+            }
+        }
+
+        ArrayList<NodeWithDependency> dependencyList = new ArrayList<NodeWithDependency>();
+        NodeWithDependency nodeWithDependency;
+        ArrayList<String> nodeNames = new ArrayList(nodeTemplate.keySet());
+        for (int i = 0; i < nodeTemplate.size(); i++) {
+            nodeWithDependency = new NodeWithDependency(nodeNames.get(i));
+//            System.out.println(nodeTemplate.get(nodeNames.get(i)));
+//            System.out.println(((Map) nodeTemplate.get(nodeNames.get(i))).containsKey("requirements"));
+//            System.out.println(nodeWithDependency.name);
+//            System.out.println(((Map) nodeTemplate.get(nodeNames.get(i))));
+//            Map tmpNode = ((Map) nodeTemplate.get(nodeNames.get(i)));
+//            for (Object key : tmpNode.keySet()) {
+//                System.out.println(tmpNode.get(key));
+//                System.out.println(key);
+//            }
+//            System.out.println(((Map) nodeTemplate.get(nodeNames.get(i))).get("requirements"));
+            if (((Map) nodeTemplate.get(nodeNames.get(i))).containsKey("requirements")) {
+//                System.out.println(((Map) nodeTemplate.get(nodeNames.get(i))).get("requirements"));
+                ArrayList<Map> curNode = new ArrayList<>((ArrayList) ((Map) nodeTemplate.get(nodeNames.get(i))).get("requirements"));
+//                System.out.println(curNode);
+                Iterator<Map> it = curNode.iterator();
+                do {
+                    nodeWithDependency.dependencyList.add((String) it.next().values().iterator().next());
+//                    System.out.println(nodeWithDependency.dependencyList);
+                } while (it.hasNext());
+            }
+            dependencyList.add(nodeWithDependency);
+//            System.out.println(dependencyList);
+        }
+        nodeNames.clear();
+
+        System.out.println(dependencyList);
+        do {
+            for (int i = 0; i < dependencyList.size(); i++) {
+                if (dependencyList.get(i).dependencyList.isEmpty()) {
+                    for (int j = 0; j < dependencyList.size(); j++) {
+                        System.out.println(dependencyList.get(i).name);
+                        dependencyList.get(j).dependencyList.remove(dependencyList.get(i).name);
+                        System.out.println(dependencyList.get(j).dependencyList);
+                    }
+                    nodeNames.add(dependencyList.get(i).name);
+                    dependencyList.remove(i);
+                    i--;
+                }
+                System.out.println("nodeName: " + nodeNames);
+            }
+        } while (!dependencyList.isEmpty());
+        System.out.println(nodeNames);
+//        System.out.println(nodeNames);
+
         List<Map.Entry> entries =
                 new ArrayList(nodeTemplate.entrySet());
 
         List<Map.Entry> resultEntries = new ArrayList();
 
-//        Collections.sort(entries, new Comparator<Map.Entry<String, Integer>>() {
-//            public int compare(Map.Entry<String, Integer> a, Map.Entry<String, Integer> b){
-//                return a.getValue().compareTo(b.getValue());
-//            }
-//        });
-        Map<String, Integer> sortedMap = new LinkedHashMap<String, Integer>();
+        Collections.sort(entries, new Comparator<Map.Entry>() {
+            public int compare(Map.Entry a, Map.Entry b) {
+                return Integer.compare(nodeNames.indexOf(a.getValue()), nodeNames.indexOf(b.getValue()));
+            }
+        });
+        Map sortedMap = new LinkedHashMap<String, Integer>();
         for (Map.Entry<String, Integer> entry : entries) {
             sortedMap.put(entry.getKey(), entry.getValue());
         }
+
+        ((Map) map.get("topology_template")).put("node_templates", sortedMap);
     }
 
 //    class

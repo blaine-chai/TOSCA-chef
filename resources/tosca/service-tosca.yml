@@ -55,11 +55,11 @@ topology_template:
         database_endpoint:
           properties:
             port: { get_input: db_port }
-        requirements:
-          - host: mysql_dbms
-        interfaces:
-          Standard:
-            configure: mysql_database_configure.sh
+      requirements:
+        - host: mysql_dbms
+      interfaces:
+        Standard:
+          configure: mysql_database_configure.sh
 
     mysql_dbms:
       type: DBMS
