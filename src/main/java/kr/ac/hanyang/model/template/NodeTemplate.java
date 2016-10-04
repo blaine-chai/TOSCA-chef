@@ -140,7 +140,7 @@ public class NodeTemplate extends LinkedHashMap implements ToscaValidator {
     public boolean isValid() {
         // TODO Auto-generated method stub
         for(Object entry:this.data.entrySet()){
-
+//test
         }
         return false;
     }
