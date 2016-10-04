@@ -1,9 +1,9 @@
-package com.blainechai;
+package kr.ac.hanyang;
 
-import com.blainechai.model.Node;
-import com.blainechai.model.NodeTemplate;
-import com.blainechai.model.TopologyTemplete;
-import com.blainechai.model.ToscaInputs;
+import kr.ac.hanyang.model.Node;
+import kr.ac.hanyang.model.template.NodeTemplate;
+import kr.ac.hanyang.model.template.TopologyTemplate;
+import kr.ac.hanyang.model.ToscaInputs;
 import org.yaml.snakeyaml.Yaml;
 
 import java.io.FileInputStream;
@@ -31,7 +31,6 @@ public class ToscaParser {
         this.setNodeTemplate(map);
         this.sortByDependency();
         this.setInputs(map);
-//        sout
     }
 
     //get topology_templates's input
@@ -99,7 +98,7 @@ public class ToscaParser {
 
     @Deprecated
     public void makeTopologyTemplete(Map node) {
-        TopologyTemplete topologyTemplete = new TopologyTemplete();
+        TopologyTemplate topologyTemplete = new TopologyTemplate();
         for (Object subValueKey : node.keySet()) {
             if (node.get(subValueKey) != null && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
                 getInfo((Map) node.get(subValueKey));
@@ -119,28 +118,24 @@ public class ToscaParser {
             if (node.get(subValueKey) != null
                     && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
                 if (((String) subValueKey).equals("node_templates")) {
-//                    Object nodeTempateNode = node.get(subValueKey);
                     for (Object key : ((Map) node.get(subValueKey)).keySet()) {
                         nodeTemplate.put(key, ((Map) node.get(subValueKey)).get(key));
-//                        System.out.println(values);
                     }
                     break;
                 }
                 setNodeTemplate((Map) node.get(subValueKey));
             }
         }
-        System.out.println("hi");
-        System.out.println(nodeTemplate);
     }
 
-    public static ArrayList<Node> getParentNodeByKey(Map node, String key, String parentKey, ArrayList maps) {
+    public static ArrayList<Node> getParentNodesByKey(Map node, String key, String parentKey, ArrayList maps) {
         for (Object subValueKey : node.keySet()) {
             if (((String) subValueKey).equals(key)) {
                 maps.add(new Node(node, (String) parentKey));
             }
             if (node.get(subValueKey) != null
                     && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
-                getParentNodeByKey((Map) node.get(subValueKey), key, (String) subValueKey, maps);
+                getParentNodesByKey((Map) node.get(subValueKey), key, (String) subValueKey, maps);
             }
 
         }
@@ -148,7 +143,8 @@ public class ToscaParser {
     }
 
     public static boolean isLeafNode(Object curNode) {
-        return !(LinkedHashMap.class.getName().equals(curNode.getClass().getName()) || Node.class.getName().equals(curNode.getClass().getName()));
+        return !(LinkedHashMap.class.getName().equals(curNode.getClass().getName())
+                || Node.class.getName().equals(curNode.getClass().getName()));
     }
 
 
@@ -163,7 +159,6 @@ public class ToscaParser {
             }
             if (node.get(subValueKey) != null
                     && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
-//                System.out.println(subValueKey)
                 getNodeByKey((Map) node.get(subValueKey), key, nodeList);
             }
 
@@ -211,7 +206,7 @@ public class ToscaParser {
 
         ArrayList<NodeWithDependency> dependencyList = new ArrayList<NodeWithDependency>();
         NodeWithDependency nodeWithDependency;
-        ArrayList<String> nodeNames = new ArrayList(nodeTemplate.keySet());
+        final ArrayList<String> nodeNames = new ArrayList(nodeTemplate.keySet());
         for (int i = 0; i < nodeTemplate.size(); i++) {
             nodeWithDependency = new NodeWithDependency(nodeNames.get(i));
             if (((Map) nodeTemplate.get(nodeNames.get(i))).containsKey("requirements")) {
@@ -239,8 +234,6 @@ public class ToscaParser {
                 System.out.println("nodeName: " + nodeNames);
             }
         } while (!dependencyList.isEmpty());
-        System.out.println(nodeNames);
-//        System.out.println(nodeNames);
 
         List<Map.Entry> entries =
                 new ArrayList(nodeTemplate.entrySet());
@@ -256,6 +249,4 @@ public class ToscaParser {
 
         ((Map) map.get("topology_template")).put("node_templates", sortedMap);
     }
-
-//    class
 }

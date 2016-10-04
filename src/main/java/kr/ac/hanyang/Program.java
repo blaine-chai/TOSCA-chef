@@ -1,4 +1,4 @@
-package com.blainechai;
+package kr.ac.hanyang;
 
 /**
  * Created by blainechai on 2016. 4. 12..
@@ -8,8 +8,8 @@ package com.blainechai;
 public class Program {
 
     public static void main(String[] args) {
-//        ToscaParser parser = new ToscaParser(Constants.TOSCA_FILE_PATH + Constants.TOSCA_FILE_NAME);
-        ToscaParser parser = new ToscaParser(Constants.TOSCA_FILE_PATH + "master-service-template-application.yml");
+        ToscaParser parser = new ToscaParser(Constants.TOSCA_FILE_PATH + Constants.TOSCA_FILE_NAME);
+//        ToscaParser parser = new ToscaParser(Constants.TOSCA_FILE_PATH + "master-service-template-application.yml");
 
         ChefUtil chefUtil = new ChefUtil(Constants.CHEF_PROJECT_PATH, Constants.TOSCA_FILE_PATH);
         chefUtil.createCookbooks(parser);

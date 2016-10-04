@@ -1,4 +1,4 @@
-package com.blainechai.model;
+package kr.ac.hanyang.model;
 
 import java.util.LinkedHashMap;
 import java.util.Map;

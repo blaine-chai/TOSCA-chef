@@ -1,0 +1,2 @@
+The TOSCA metamodel includes complex types (e.g., Node Types, Relationship Types, Capability Types, Data Types, etc.) each of which include their own list of reserved keynames that are sometimes marked as required.
+These types may be used to derive other types. These derived types (e.g., child types) do not have to provide required keynames as long as they have been specified in the type they have been derived from (i.e., their parent type).

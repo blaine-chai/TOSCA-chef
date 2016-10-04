@@ -1,4 +1,4 @@
-package com.blainechai;
+package kr.ac.hanyang;
 
 import org.apache.commons.exec.CommandLine;
 import org.apache.commons.exec.DefaultExecutor;
