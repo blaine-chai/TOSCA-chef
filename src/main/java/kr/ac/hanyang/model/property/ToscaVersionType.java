@@ -17,7 +17,7 @@ package kr.ac.hanyang.model.property;
  * [Maven-Version] The TOSCA version type is compatible with the Apache Maven versioning policy.
  */
 
-public interface ToscaVersion {
+public class ToscaVersionType {
 
     public static final String TOSCA_NAMESPACE_PREFIX = "tosca";
     public static final String TOSCA_DEFINITIONS_VERSION = "tosca_definitions_version";
@@ -25,5 +25,5 @@ public interface ToscaVersion {
     public static final String SHORTHAND_NAME = "version";
     public static final String TYPE_QUALIFIED_NAME = "tosca:version";
 
-    public boolean compareVersion(String version);
+//    public boolean compareVersion(String version);
 }

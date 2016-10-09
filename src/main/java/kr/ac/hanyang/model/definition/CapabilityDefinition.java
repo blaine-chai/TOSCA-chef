@@ -1,8 +1,11 @@
 package kr.ac.hanyang.model.definition;
 
-import kr.ac.hanyang.model.basemodel.ToscaValidator;
-import kr.ac.hanyang.model.DefinitionKeyName;
-import kr.ac.hanyang.model.DefinitionKeyNames;
+import kr.ac.hanyang.model.KeyName;
+import kr.ac.hanyang.model.KeyNames;
+import kr.ac.hanyang.model.basemodel.validator.DefinitionValidator;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 3.6.1 Capability definition
@@ -11,7 +14,7 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
 /**
  * Keyname
  * Requred
- * Type
+ * type
  * Constraints
  * Description
 
@@ -19,7 +22,7 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
  yes
  string
  N/A
- The required name of the Capability Type the capability
+ The required name of the Capability type the capability
 
  description
  no
@@ -43,7 +46,7 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
  no
  string[]
  N/A
- An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type.abstract
+ An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability type.abstract
 
  occurrences
  no
@@ -54,6 +57,7 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
  * Grammar
  * Short notation
  * <capability_definition_name>: <capability_type>
+ *
  * Extended notation
  * <capability_definition_name>:
  * type: <capability_type>
@@ -72,38 +76,26 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
  * node_type_names: represents the optional list of one or more names of Node Types that the Capability definition supports as valid sources for a successful relationship to be established to itself.
  *
  * Additional requirements
- * Any Node Type (names) provides as values for the valid_source_types keyname SHALL be typecompatible (i.e., derived from the same parent Node Type) with any Node Types defined using the same keyname in the parent Capability Type.
+ * Any Node type (names) provides as values for the valid_source_types keyname SHALL be typecompatible (i.e., derived from the same parent Node type) with any Node Types defined using the same keyname in the parent Capability type.
  * Capability symbolic names SHALL be unique; it is an error if a capability name is found to occur more than once.
 
  */
 //TODO: constraints
 
-public class CapabilityDefinition implements ToscaValidator {
+public class CapabilityDefinition extends DefinitionValidator {
 
-    private DefinitionKeyNames keyNames;
+    public CapabilityDefinition(){}
 
-    public CapabilityDefinition() {
+    public CapabilityDefinition(Map data) {
         super();
-        keyNames = new DefinitionKeyNames();
-        keyNames.add(new DefinitionKeyName("type", true, "string", "The required name of the Capability Type the capability","N/A"));
-        keyNames.add(new DefinitionKeyName("description", false, "description", "The optional description of the Capability definition.","N/A"));
-        keyNames.add(new DefinitionKeyName("properties", false, "list of property definitions", "An optional list of property definitions for the Capability definition.","N/A"));
-        keyNames.add(new DefinitionKeyName("attributes", false, "list of attribute definitions", "An optional list of attribute definitions for the Capability definition.","N/A"));
-        keyNames.add(new DefinitionKeyName("valid_source_types", false, "string[]", "An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability Type.abstract","N/A"));
-        keyNames.add(new DefinitionKeyName("occurrences", false, "range of integer", "The optional minimum and maximum occurrences for the capability. By default, an exported Capability should allow at least one relationship to be formed with it with a maximum of UNBOUNDED relationships. Note: the keyword UNBOUNDED is also supported to represent any positive integer.","implied default of [1,UNBOUNDED]"));
+        this.data = data;
+        keyNames.add(new KeyName("type", true, "string", "The required name of the Capability type the capability","N/A"));
+        keyNames.add(new KeyName("description", false, "description", "The optional description of the Capability definition.","N/A"));
+        keyNames.add(new KeyName("properties", false, "list of property definitions", "An optional list of property definitions for the Capability definition.","N/A"));
+        keyNames.add(new KeyName("attributes", false, "list of attribute definitions", "An optional list of attribute definitions for the Capability definition.","N/A"));
+        keyNames.add(new KeyName("valid_source_types", false, "string[]", "An optional list of one or more valid names of Node Types that are supported as valid sources of any relationship established to the declared Capability type.abstract","N/A"));
+        keyNames.add(new KeyName("occurrences", false, "range of integer", "The optional minimum and maximum occurrences for the capability. By default, an exported Capability should allow at least one relationship to be formed with it with a maximum of UNBOUNDED relationships. Note: the keyword UNBOUNDED is also supported to represent any positive integer.","implied default of [1,UNBOUNDED]"));
 
 
     }
-
-    @Override
-    public boolean isValid() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public DefinitionKeyNames getDefinitionKeyNames() {
-        return keyNames;
-    }
-
-
 }

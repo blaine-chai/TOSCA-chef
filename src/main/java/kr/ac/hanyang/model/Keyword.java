@@ -3,6 +3,7 @@ package kr.ac.hanyang.model;
 /**
  * Created by blainechai on 2016. 8. 24..
  */
+@Deprecated
 public abstract class Keyword {
     String VALID_ALIAS;
     String NAMESPACE_URI;

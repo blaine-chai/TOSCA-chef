@@ -4,9 +4,11 @@ package kr.ac.hanyang.model.definition;
  * Created by blainechai on 2016. 9. 21..
  */
 
-import kr.ac.hanyang.model.basemodel.ToscaValidator;
-import kr.ac.hanyang.model.DefinitionKeyName;
-import kr.ac.hanyang.model.DefinitionKeyNames;
+import kr.ac.hanyang.model.KeyName;
+import kr.ac.hanyang.model.basemodel.validator.DefinitionValidator;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 3.5.8 Property definition
@@ -18,7 +20,7 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
  * Keynames*
  Keyname
  Required
- Type
+ type
  Constraints
  Description
 
@@ -73,7 +75,7 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
  *
  * Grammar
  *
- * property_name>:
+ * <property_name>:
  type: <property_type>
  description: <property_description> required: <property_required> default: <default_value>
  status: <status_value>
@@ -104,23 +106,20 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
  entries in a list or map property type.
  */
 //// TODO: 2016. 10. 4. constraints
-public class PropertyDefinition implements ToscaValidator {
+public class PropertyDefinition extends DefinitionValidator {
 
-    private DefinitionKeyNames keyNames;
+    public PropertyDefinition(){}
 
-    public PropertyDefinition() {
+    public PropertyDefinition(Map data) {
         super();
-        keyNames = new DefinitionKeyNames();
-        keyNames.add(new DefinitionKeyName("type", true, "string", "The required data type for the property.", "None"));
-        keyNames.add(new DefinitionKeyName("description", false, "description", "The optional description for the property.", "None"));
-        keyNames.add(new DefinitionKeyName("required", false, "boolean", "An optional key that declares a property as required (true) or not (false).", "default: true"));
-        keyNames.add(new DefinitionKeyName("default", false, "<any>", "An optional key that may provide a value to be used as a default if not provided by another means.", "None"));
-        keyNames.add(new DefinitionKeyName("status", false, "string", "The optional status of the property relative to the specification or implementation. See table below for valid values.", "default: supported"));
-        keyNames.add(new DefinitionKeyName("constraints", false, "list of constraint clauses", "The optional list of sequenced constraint clauses for the property.", "None"));
-        keyNames.add(new DefinitionKeyName("entry_schema", false, "string", "The optional key that is used to declare the name of the Datatype definition for entries of set types such as the TOSCA list or map.", "None"));
+        this.data = data;
+        keyNames.add(new KeyName("type", true, "string", "The required data type for the property.", "None"));
+        keyNames.add(new KeyName("description", false, "description", "The optional description for the property.", "None"));
+        keyNames.add(new KeyName("required", false, "boolean", "An optional key that declares a property as required (true) or not (false).", "default: true"));
+        keyNames.add(new KeyName("default", false, "<any>", "An optional key that may provide a value to be used as a default if not provided by another means.", "None"));
+        keyNames.add(new KeyName("status", false, "string", "The optional status of the property relative to the specification or implementation. See table below for valid values.", "default: supported"));
+        keyNames.add(new KeyName("constraints", false, "list of constraint clauses", "The optional list of sequenced constraint clauses for the property.", "None"));
+        keyNames.add(new KeyName("entry_schema", false, "string", "The optional key that is used to declare the name of the Datatype definition for entries of set types such as the TOSCA list or map.", "None"));
     }
 
-    public boolean isValid() {
-        return false;
-    }
 }

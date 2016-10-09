@@ -1,15 +1,18 @@
 package kr.ac.hanyang.model.assignment;
 
-import kr.ac.hanyang.model.basemodel.ToscaValidator;
+import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
 import kr.ac.hanyang.model.KeyName;
 import kr.ac.hanyang.model.KeyNames;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 3.7.1 Capability assignment
  * <p>
  * Keyname
  * Required
- * Type
+ * type
  * Description
 
  properties
@@ -35,26 +38,14 @@ import kr.ac.hanyang.model.KeyNames;
  attribute_assignments: represents the optional list of attribute assignments for the capability definition.
  */
 
-public class CapabilityAssignment implements ToscaValidator {
+public class CapabilityAssignment extends TemplateValidator {
 
-    private KeyNames keyNames;
+    public CapabilityAssignment(){}
 
-    public CapabilityAssignment() {
+    public CapabilityAssignment(Map data) {
         super();
-        keyNames = new KeyNames();
+        this.data = data;
         keyNames.add(new KeyName("properties", false, "list of property assignments", "An optional list of property definitions for the Capability definition."));
         keyNames.add(new KeyName("attributes", false, "list of attribute assignments", "An optional list of attribute definitions for the Capability definition."));
     }
-
-    @Override
-    public boolean isValid() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public KeyNames getKeyNames() {
-        return keyNames;
-    }
-
-
 }

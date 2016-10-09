@@ -43,8 +43,8 @@ public class ChefUtil {
 
         ArrayList<String> arrayList = new ArrayList(parser.nodeTemplate.keySet());
         String runList = "";
-        runList += "recipe[" + arrayList.get(arrayList.size() - 1) + "]";
-        for (int i = arrayList.size() - 1; i > 0; i--) {
+        runList += "recipe[" + arrayList.get(arrayList.size() - 2) + "]";
+        for (int i = arrayList.size() - 2; i > 0; i--) {
             runList += ",recipe[" + arrayList.get(i - 1) + "]";
         }
         System.out.println(runList);
@@ -77,6 +77,7 @@ public class ChefUtil {
             ArrayList tmpList = ToscaParser.getNodeByKey((Map) parser.nodeTemplate.get(key), "type");
             if (!tmpList.isEmpty()) {
                 if (ToscaParser.isLeafNode(tmpList.get(0)) && !((String) tmpList.get(0)).contains("Compute")) {
+                    System.out.println(key+"!!!!!!!!!!!!!!!!!!!!");
                     createCookbook((String) key);
                 }
             } else {

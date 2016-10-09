@@ -1,105 +1,14 @@
 package kr.ac.hanyang.model.definition;
 
-/**
- * Created by blainechai on 2016. 9. 21..
- * <p>
- * 3.5.6 Artifact definition
- * <p>
- * <p>
- * Keyname
- * Required
- * Type
- * Description
- * <p>
- * type
- * yes
- * string
- * The required artifact type for the artifact definition.
- * file
- * yes
- * string
- * The required URI string (relative or absolute) which can be used to locate the artifact’s file.
- * repository
- * no
- * string
- * The optional name of the repository definition which contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.
- * description
- * no
- * description
- * The optional description for the artifact definition.
- * deploy_path
- * no
- * string
- * The file path the associated file would be deployed into within the target node’s container.
- * <p>
- * 3.5.6 Artifact definition
- * <p>
- * <p>
- * Keyname
- * Required
- * Type
- * Description
- * <p>
- * type
- * yes
- * string
- * The required artifact type for the artifact definition.
- * file
- * yes
- * string
- * The required URI string (relative or absolute) which can be used to locate the artifact’s file.
- * repository
- * no
- * string
- * The optional name of the repository definition which contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.
- * description
- * no
- * description
- * The optional description for the artifact definition.
- * deploy_path
- * no
- * string
- * The file path the associated file would be deployed into within the target node’s container.
- * <p>
- * 3.5.6 Artifact definition
- * <p>
- * <p>
- * Keyname
- * Required
- * Type
- * Description
- * <p>
- * type
- * yes
- * string
- * The required artifact type for the artifact definition.
- * file
- * yes
- * string
- * The required URI string (relative or absolute) which can be used to locate the artifact’s file.
- * repository
- * no
- * string
- * The optional name of the repository definition which contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository.
- * description
- * no
- * description
- * The optional description for the artifact definition.
- * deploy_path
- * no
- * string
- * The file path the associated file would be deployed into within the target node’s container.
- */
-
-/**
+/*
  * 3.5.6 Artifact definition
  */
 
-/**
+/*
  *
- * Keyname
+ Keyname
  Required
- Type
+ type
  Description
 
  type
@@ -127,9 +36,13 @@ package kr.ac.hanyang.model.definition;
  The file path the associated file would be deployed into within the target node’s container.
  */
 
-import kr.ac.hanyang.model.basemodel.ToscaValidator;
+import kr.ac.hanyang.model.basemodel.validator.DefinitionValidator;
+import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
 import kr.ac.hanyang.model.KeyName;
 import kr.ac.hanyang.model.KeyNames;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * grammar
@@ -156,21 +69,21 @@ import kr.ac.hanyang.model.KeyNames;
  within the target node’s container.
 
  */
-public class ArtifactDefinition implements ToscaValidator {
 
-    private KeyNames keyNames;
+//TODO: ArtifactType의 list로 구현하여 어떤 모양을 지정하는 방식으로 구현
+public class ArtifactDefinition extends DefinitionValidator {
 
-    public ArtifactDefinition() {
+
+
+    public ArtifactDefinition(Map data) {
         super();
-        keyNames = new KeyNames();
+        this.data = data;
         keyNames.add(new KeyName("type", true, "string", "The required artifact type for the artifact definition."));
         keyNames.add(new KeyName("file", true, "string", "The required URI string (relative or absolute) which can be used to locate the artifact’s file."));
         keyNames.add(new KeyName("repository", false, "string", "The optional name of the repository definition which contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository."));
         keyNames.add(new KeyName("description", false, "description", "The optional description for the artifact definition."));
         keyNames.add(new KeyName("deploy_path", false, "string", "The file path the associated file would be deployed into within the target node’s container."));
+
     }
 
-    public boolean isValid() {
-        return false;
-    }
 }

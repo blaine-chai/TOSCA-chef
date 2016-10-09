@@ -1,6 +1,10 @@
 package kr.ac.hanyang.model;
 
-import kr.ac.hanyang.model.basemodel.ToscaValidator;
+import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
+import kr.ac.hanyang.model.basemodel.validator.ValidatorModel;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 3.5.2 Constraint clause
@@ -9,7 +13,7 @@ import kr.ac.hanyang.model.basemodel.ToscaValidator;
 /**
  * Keyname 
  * Required
- * Type
+ * type
  * Description
 
  type
@@ -49,36 +53,25 @@ import kr.ac.hanyang.model.basemodel.ToscaValidator;
  *
  * <p>
  * group_name: represents the required symbolic name of the group as a string.
- * group_type_name: represents the name of the Group Type the definition is based upon.
+ * group_type_name: represents the name of the Group type the definition is based upon.
  * group_description: contains an optional description of the group.
- * property_assignments: represents the optional list of property assignments for the group definition that provide values for properties defined in its declared Group Type. 
+ * property_assignments: represents the optional list of property assignments for the group definition that provide values for properties defined in its declared Group type.
  * list_of_node_templates: contains the required list of one or more node template names (within the same topology template) that are members of this logical group.
- * interface_definitions: represents the optional list of interface definitions for the group definition that augment those provided by its declared Group Type.
+ * interface_definitions: represents the optional list of interface definitions for the group definition that augment those provided by its declared Group type.
  */
 
-public class ConstraintClause implements ToscaValidator {
+public class ConstraintClause extends ValidatorModel{
 
-    private KeyNames keyNames;
+    public ConstraintClause(){}
 
-    public ConstraintClause() {
+    public ConstraintClause(Map data) {
         super();
-        keyNames = new KeyNames();
+        this.data = data;
         keyNames.add(new KeyName("type", true, "string ", "The required name of the group type the group definition is based upon."));
         keyNames.add(new KeyName("description", false, "description", "The optional description for the group definition."));
         keyNames.add(new KeyName("properties", false, "list of property assignments", "An optional list of property value assignments for the group definition."));
         keyNames.add(new KeyName("members", false, "list of string", "The optional list of one or more node template names that are members of this group definition."));
         keyNames.add(new KeyName("interfaces", false , "list of interface definitions", "An optional list of named interface definitions for the group definition."));
     }
-
-    @Override
-    public boolean isValid() {
-        // TODO Auto-generated method stub
-        return false;
-    }
-
-    public KeyNames getKeyNames() {
-        return keyNames;
-    }
-
 
 }

@@ -1,4 +1,6 @@
 package kr.ac.hanyang.model.definition;
+import kr.ac.hanyang.model.basemodel.validator.DefinitionValidator;
+import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
 
 /**
  * Created by blainechai on 2016. 9. 21..
@@ -7,13 +9,13 @@ package kr.ac.hanyang.model.definition;
  * <p>
  * Keyname
  * Required
- * Type
+ * type
  * Description
  * <p>
  * properties
  * no
  * list of property filter definition
- * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node Type, Capability Types, etc.) based upon their property definitions’ values.
+ * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node type, Capability Types, etc.) based upon their property definitions’ values.
  * <p>
  * capabilities
  * no
@@ -25,19 +27,19 @@ package kr.ac.hanyang.model.definition;
  * <capability name_or_type> : properties
  * no
  * list of property filter definitions
- * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node Type, Capability Types, etc.) based upon their capabilities’ property definitions’ values.
+ * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node type, Capability Types, etc.) based upon their capabilities’ property definitions’ values.
  * <p>
  * 3.5.4 Node Filter definition
  * <p>
  * Keyname
  * Required
- * Type
+ * type
  * Description
  * <p>
  * properties
  * no
  * list of property filter definition
- * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node Type, Capability Types, etc.) based upon their property definitions’ values.
+ * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node type, Capability Types, etc.) based upon their property definitions’ values.
  * <p>
  * capabilities
  * no
@@ -49,7 +51,7 @@ package kr.ac.hanyang.model.definition;
  * <capability name_or_type> : properties
  * no
  * list of property filter definitions
- * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node Type, Capability Types, etc.) based upon their capabilities’ property definitions’ values.
+ * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node type, Capability Types, etc.) based upon their capabilities’ property definitions’ values.
  */
 
 /**
@@ -59,13 +61,13 @@ package kr.ac.hanyang.model.definition;
 /**
  * Keyname
  Required
- Type
+ type
  Description
 
  properties
  no
  list of property filter definition
- An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node Type, Capability Types, etc.) based upon their property definitions’ values.
+ An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node type, Capability Types, etc.) based upon their property definitions’ values.
 
  capabilities
  no
@@ -77,12 +79,13 @@ package kr.ac.hanyang.model.definition;
  * <capability name_or_type> : properties
  * no
  * list of property filter definitions
- * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node Type, Capability Types, etc.) based upon their capabilities’ property definitions’ values.
+ * An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node type, Capability Types, etc.) based upon their capabilities’ property definitions’ values.
  */
 
-import kr.ac.hanyang.model.basemodel.ToscaValidator;
 import kr.ac.hanyang.model.KeyName;
 import kr.ac.hanyang.model.KeyNames;
+
+import java.util.Map;
 
 /** Grammar
  * <filter_name>:
@@ -104,18 +107,15 @@ import kr.ac.hanyang.model.KeyNames;
  - <cap_m_property_filter_def_n>
  */
 
-public class NodeFilterDefinition implements ToscaValidator {
+public class NodeFilterDefinition extends DefinitionValidator {
 
-    private KeyNames keyNames;
+    public NodeFilterDefinition(){}
 
-    public NodeFilterDefinition() {
+    public NodeFilterDefinition(Map data) {
         super();
-        keyNames = new KeyNames();
-        keyNames.add(new KeyName("properties", false, "list of property filter definition", " An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node Type, Capability Types, etc.) based upon their property definitions’ values."));
+        this.data = data;
+        keyNames.add(new KeyName("properties", false, "list of property filter definition", " An optional sequenced list of property filters that would be used to select (filter) matching TOSCA entities (e.g., Node Template, Node type, Capability Types, etc.) based upon their property definitions’ values."));
         keyNames.add(new KeyName("capabilities", false, "list of capability names or capability type names", "An optional sequenced list of capability names or types that would be used to select (filter) matching TOSCA entities based upon their existence."));
     }
 
-    public boolean isValid() {
-        return false;
-    }
 }

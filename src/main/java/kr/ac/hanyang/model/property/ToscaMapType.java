@@ -24,17 +24,19 @@ public interface ToscaMapType {
      * <some_entity>:
      ...
      properties:
-     emails:
-     type: map entry_schema:
-     description: basic email address
-     type: string
-     constraints:
-     - max_length: 128
+       emails:
+         type: map
+         entry_schema:
+         description: basic email address
+         type: string
+         constraints:
+           - max_length: 128
      */
 
     //also entry_schema's type can be other Defined information
     /**
      * entry_schema:
-     *  description: simple contact information type: ContactInfo
+     *  description: simple contact information
+     *  type: ContactInfo
      */
 }

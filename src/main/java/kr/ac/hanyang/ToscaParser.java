@@ -97,8 +97,8 @@ public class ToscaParser {
     }
 
     @Deprecated
-    public void makeTopologyTemplete(Map node) {
-        TopologyTemplate topologyTemplete = new TopologyTemplate();
+    public void makeTopologyTemplate(Map node) {
+        TopologyTemplate topologyTemplate = new TopologyTemplate(node);
         for (Object subValueKey : node.keySet()) {
             if (node.get(subValueKey) != null && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
                 getInfo((Map) node.get(subValueKey));

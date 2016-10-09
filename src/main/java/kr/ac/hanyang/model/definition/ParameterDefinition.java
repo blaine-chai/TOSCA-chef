@@ -4,16 +4,19 @@ package kr.ac.hanyang.model.definition;
  * Created by blainechai on 2016. 9. 21..
  */
 
-import kr.ac.hanyang.model.basemodel.ToscaValidator;
-import kr.ac.hanyang.model.DefinitionKeyName;
-import kr.ac.hanyang.model.DefinitionKeyNames;
+import kr.ac.hanyang.model.KeyName;
+import kr.ac.hanyang.model.KeyNames;
+import kr.ac.hanyang.model.basemodel.validator.DefinitionValidator;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 3.5.12 Parameter definition
  *
  * Keyname
  Required
- Type
+ type
  Constraints
  Description
 
@@ -60,20 +63,18 @@ import kr.ac.hanyang.model.DefinitionKeyNames;
  entry_constraints: represents the optional sequenced list of one or more constraint clauses on
  entries in a list or map parameter type.
  */
-public class ParameterDefinition implements ToscaValidator {
+public class ParameterDefinition extends DefinitionValidator {
 
+    public String type;
+    public String value;
 
-    private DefinitionKeyNames keyNames;
+    public ParameterDefinition(){}
 
-    public ParameterDefinition() {
+    public ParameterDefinition(Map data) {
         super();
-        keyNames = new DefinitionKeyNames();
-        keyNames.add(new DefinitionKeyName("type", false, "string", "The required data type for the parameter.Note: This keyname is required for a TOSCA Property definition, but is not for a TOSCA Parameter definition.", "None"));
-        keyNames.add(new DefinitionKeyName("value", false, "<any>", "The type-compatible value to assign to the named parameter. Parameter values may be provided as the result from the evaluation of an expression or a function.", "N/A"));
-
+        this.data = data;
+        keyNames.add(new KeyName("type", false, "string", "The required data type for the parameter.Note: This keyname is required for a TOSCA Property definition, but is not for a TOSCA Parameter definition.", "None"));
+        keyNames.add(new KeyName("value", false, "<any>", "The type-compatible value to assign to the named parameter. Parameter values may be provided as the result from the evaluation of an expression or a function.", "N/A"));
     }
 
-    public boolean isValid() {
-        return false;
-    }
 }

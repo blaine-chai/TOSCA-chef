@@ -8,6 +8,7 @@ public class KeyName {
     private boolean required;
     private String type;
     private String description;
+    private String constraint;
 
     public KeyName() {
     }
@@ -17,6 +18,14 @@ public class KeyName {
         this.required = required;
         this.type = type;
         this.description = description;
+    }
+
+    public KeyName(String keyName, boolean required, String type, String description, String constraint) {
+        this.keyName = keyName;
+        this.required = required;
+        this.type = type;
+        this.description = description;
+        this.constraint = constraint;
     }
 
     public String getKeyName() {
@@ -49,5 +58,13 @@ public class KeyName {
 
     public void setDescription(String description) {
         this.description = description;
+    }
+
+    public String getConstraint() {
+        return constraint;
+    }
+
+    public void setConstraint(String constraint) {
+        this.constraint = constraint;
     }
 }

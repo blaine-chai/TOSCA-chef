@@ -2,7 +2,21 @@ package kr.ac.hanyang.model.template;
 
 import kr.ac.hanyang.model.KeyName;
 import kr.ac.hanyang.model.KeyNames;
-import kr.ac.hanyang.model.basemodel.ToscaValidator;
+import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
+import kr.ac.hanyang.model.collection.Inputs;
+import kr.ac.hanyang.model.collection.NodeTemplates;
+import kr.ac.hanyang.model.collection.Outputs;
+import kr.ac.hanyang.model.definition.GroupDefinition;
+import kr.ac.hanyang.model.definition.PolicyDefinition;
+import kr.ac.hanyang.model.type.GroupType;
+import kr.ac.hanyang.model.type.PolicyType;
+
+import java.lang.reflect.Constructor;
+import java.lang.reflect.Field;
+import java.lang.reflect.ParameterizedType;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * 3.8.1 TopologyTemplate
@@ -11,51 +25,51 @@ import kr.ac.hanyang.model.basemodel.ToscaValidator;
 /**
  * Keyname
  * Required
- * Type
+ * type
  * Description
-
-description 
-no 
-description 
-The optional description for the Topology Template.
-
-inputs 
-no 
-list of parameter definitions
-An optional list of input parameters (i.e., as parameter definitions) for the Topology Template.
-
-node_templates 
-no 
-list of node templates
-An optional list of node template definitions for the Topology Template.
-
-relationship_templates 
-no 
-list of relationship templates
-An optional list of relationship templates for the Topology Template.
-
-groups 
-no 
-list of group definitions
-An optional list of Group definitions whose members are node templates defined within this same Topology Template.
-
-policies 
-no 
-list of policy definitions
-An optional list of Policy definitions for the Topology Template.
-
-outputs 
-no 
-list of parameter definitions
-An optional list of output parameters (i.e., as parameter definitions) for the Topology Template.
-
-substitution_mappings 
-no 
-N/A 
-An optional declaration that exports the topology template as an implementation of a Node type. This also includes the mappings between the external Node Types named capabilities and requirements to existing implementations of those capabilities and requirements on Node templates declared within the topology template.
-
-
-/**
+ * <p>
+ * description
+ * no
+ * description
+ * The optional description for the Topology Template.
+ * <p>
+ * inputs
+ * no
+ * list of parameter definitions
+ * An optional list of input parameters (i.e., as parameter definitions) for the Topology Template.
+ * <p>
+ * node_templates
+ * no
+ * list of node templates
+ * An optional list of node template definitions for the Topology Template.
+ * <p>
+ * relationship_templates
+ * no
+ * list of relationship templates
+ * An optional list of relationship templates for the Topology Template.
+ * <p>
+ * groups
+ * no
+ * list of group definitions
+ * An optional list of Group definitions whose members are node templates defined within this same Topology Template.
+ * <p>
+ * policies
+ * no
+ * list of policy definitions
+ * An optional list of Policy definitions for the Topology Template.
+ * <p>
+ * outputs
+ * no
+ * list of parameter definitions
+ * An optional list of output parameters (i.e., as parameter definitions) for the Topology Template.
+ * <p>
+ * substitution_mappings
+ * no
+ * N/A
+ * An optional declaration that exports the topology template as an implementation of a Node type. This also includes the mappings between the external Node Types named capabilities and requirements to existing implementations of those capabilities and requirements on Node templates declared within the topology template.
+ * <p>
+ * <p>
+ * /**
  * Grammar
  * topology_template:
  * description: <template_description>
@@ -67,14 +81,14 @@ An optional declaration that exports the topology template as an implementation 
  * policies:
  * - <policy_definition_list>
  * # Optional declaration that exports the Topology Template
- * # as an implementation of a Node Type.
+ * # as an implementation of a Node type.
  * substitution_mappings:
  * node_type: <node_type_name>
  * capabilities:
  * <map_of_capability_mappings_to_expose>
  * requirements:
  * <map_of_requirement_mapping_to_expose>
- * 
+ * <p>
  * <p>
  * template_description: represents the optional description string for Topology Template.
  * input_parameter_list: represents the optional list of input parameters (i.e., as property definitions) for the Topology Template.
@@ -83,24 +97,30 @@ An optional declaration that exports the topology template as an implementation 
  * policy_definition_list: represents the optional sequenced list of policy definitions for the Topology Template.
  * node_template_list: represents the optional list of node template definitions for the Topology Template.
  * relationship_template_list: represents the optional list of relationship templates for the Topology Template.
- * node_type_name: represents the optional name of a Node Type that the Topology Template implements as part of the substitution_mappings.
- * map_of_capability_mappings_to_expose: represents the mappings that expose internal capabilities from node templates (within the topology template) as capabilities of the Node Type definition that is declared as part of the substitution_mappings.
- * map_of_requirement_mappings_to_expose: represents the mappings of link requirements of the Node Type definition that is declared as part of the substitution_mappings to internal requirements implementations within node templates (declared within the topology template).
- * 
- * 
- * 
+ * node_type_name: represents the optional name of a Node type that the Topology Template implements as part of the substitution_mappings.
+ * map_of_capability_mappings_to_expose: represents the mappings that expose internal capabilities from node templates (within the topology template) as capabilities of the Node type definition that is declared as part of the substitution_mappings.
+ * map_of_requirement_mappings_to_expose: represents the mappings of link requirements of the Node type definition that is declared as part of the substitution_mappings to internal requirements implementations within node templates (declared within the topology template).
+ * <p>
+ * <p>
+ * <p>
  * Required
- * Type
+ * type
  * Description
  */
 
-public class TopologyTemplate implements ToscaValidator {
+public class TopologyTemplate extends TemplateValidator {
 
-    private KeyNames keyNames;
+    public String description;
+    public Inputs inputs;
+    public ArrayList<NodeTemplate> node_templates = new ArrayList<>();
+    public ArrayList<RelationshipTemplate> relationship_templates = new ArrayList<>();
+    public ArrayList<GroupDefinition> groups = new ArrayList<>();
+    public ArrayList<PolicyDefinition> policies = new ArrayList<>();
+    public Outputs outputs;
+    public String substitution_mappings;
 
     public TopologyTemplate() {
         super();
-        keyNames = new KeyNames();
         keyNames.add(new KeyName("description", false, "description", "The optional description for the Topology Template."));
         keyNames.add(new KeyName("inputs", false, "list of parameter definitions", "An optional list of input parameters (i.e., as parameter definitions) for the Topology Template."));
         keyNames.add(new KeyName("node_templates", false, "list of node templates", "An optional list of node template definitions for the Topology Template."));
@@ -111,7 +131,44 @@ public class TopologyTemplate implements ToscaValidator {
         keyNames.add(new KeyName("substitution_mappings", false, "N/A", "An optional declaration that exports the topology template as an implementation of a Node type. This also includes the mappings between the external Node Types named capabilities and requirements to existing implementations of those capabilities and requirements on Node templates declared within the topology template."));
     }
 
-    public boolean isValid() {
-        return false;
+    public TopologyTemplate(Map data) {
+        super();
+        this.data = data;
+        keyNames.add(new KeyName("description", false, "description", "The optional description for the Topology Template."));
+        keyNames.add(new KeyName("inputs", false, "list of parameter definitions", "An optional list of input parameters (i.e., as parameter definitions) for the Topology Template."));
+        keyNames.add(new KeyName("node_templates", false, "list of node templates", "An optional list of node template definitions for the Topology Template."));
+        keyNames.add(new KeyName("relationship_templates", false, "list of relationship templates", "An optional list of relationship templates for the Topology Template."));
+        keyNames.add(new KeyName("groups", false, "list of group definitions", "An optional list of Group definitions whose members are node templates defined within this same Topology Template."));
+        keyNames.add(new KeyName("policies", false, "list of policy definitions", "An optional list of Policy definitions for the Topology Template."));
+        keyNames.add(new KeyName("outputs", false, "list of parameter definitions", "An optional list of output parameters (i.e., as parameter definitions) for the Topology Template."));
+        keyNames.add(new KeyName("substitution_mappings", false, "N/A", "An optional declaration that exports the topology template as an implementation of a Node type. This also includes the mappings between the external Node Types named capabilities and requirements to existing implementations of those capabilities and requirements on Node templates declared within the topology template."));
+
+
+        for (Object key : data.keySet()) {
+            System.out.println(key.toString() + "2");
+
+            try {
+                Field field = this.getClass().getField(key.toString());
+                String simpleClassName = field.getType().getSimpleName();
+                System.out.println(simpleClassName);
+                if (simpleClassName.equals(String.class.getSimpleName())) {
+                    field.set(this, data.get(key).toString());
+                    System.out.println(this.getClass().getField(key.toString()).get(this));
+                } else if (simpleClassName.equals(ArrayList.class.getSimpleName())) {
+                    System.out.println(((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0].getClass().getSimpleName());
+                    field.set(this, Class.forName(field.getType().getName()).newInstance());
+                    System.out.println(this.getClass().getField(key.toString()).get(this) + "!!!!!!!!!!!!!!");
+                } else {
+                    Class cl = Class.forName(field.getType().getName());
+                    Constructor constructor = cl.getConstructor(Map.class);
+                    Object o = constructor.newInstance((Map) data.get(key.toString()));
+                    field.set(this, o);
+                    System.out.println("ex");
+                    System.out.println(this.getClass().getField(key.toString()).get(this));
+                }
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
+        }
     }
 }

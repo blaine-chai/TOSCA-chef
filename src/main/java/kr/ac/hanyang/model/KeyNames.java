@@ -20,4 +20,20 @@ public class KeyNames extends ArrayList<KeyName> {
         }
         return null;
     }
+
+    public boolean contains(String key) {
+        return get(key) != null;
+    }
+
+    public boolean contains(KeyName keyName) {
+        return get(keyName.getKeyName()) != null;
+    }
+
+    public boolean isRequired(String key) {
+        return this.get(key).isRequired();
+    }
+
+    public boolean isKeyRequired(String key) {
+        return this.get(key).isRequired();
+    }
 }

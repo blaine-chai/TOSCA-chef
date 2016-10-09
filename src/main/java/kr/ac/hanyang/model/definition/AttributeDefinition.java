@@ -4,12 +4,19 @@ package kr.ac.hanyang.model.definition;
  * Created by blainechai on 2016. 9. 21..
  */
 
+import kr.ac.hanyang.model.KeyName;
+import kr.ac.hanyang.model.KeyNames;
+import kr.ac.hanyang.model.basemodel.validator.DefinitionValidator;
+import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
+
+import java.util.Map;
+
 /**
  * 3.5.10 Attribute definition
  * <p>
  * Keyname
  * Required
- * Type
+ * type
  * Constraints
  * Description
  * <p>
@@ -60,5 +67,20 @@ package kr.ac.hanyang.model.definition;
  * status_value: contains a value indicating the attribute’s status relative to the specification version (e.g., supported, deprecated, etc.). Supported status values for this keyname are defined under Property definition.
  */
 
-public class AttributeDefinition {
+//TODO: AttributeType list로 구현하여 어떤 모양을 지정하는 방식으로 구현
+
+public class AttributeDefinition extends DefinitionValidator {
+
+    public AttributeDefinition(){}
+
+    public AttributeDefinition(Map data) {
+        super();
+        this.data = data;
+        keyNames.add(new KeyName("type", true, "string", "The required data type for the attribute."));
+        keyNames.add(new KeyName("description", false, "description", "The required URI string (relative or absolute) which can be used to locate the artifact’s file."));
+        keyNames.add(new KeyName("repository", false, "string", "The optional name of the repository definition which contains the location of the external repository that contains the artifact. The artifact is expected to be referenceable by its file URI within the repository."));
+        keyNames.add(new KeyName("description", false, "description", "The optional description for the artifact definition."));
+        keyNames.add(new KeyName("deploy_path", false, "string", "The file path the associated file would be deployed into within the target node’s container."));
+    }
+
 }
