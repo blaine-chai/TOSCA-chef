@@ -112,7 +112,7 @@ public class TopologyTemplate extends TemplateValidator {
 
     public String description;
     public Inputs inputs;
-    public ArrayList<NodeTemplate> node_templates = new ArrayList<>();
+    public NodeTemplates node_templates;
     public ArrayList<RelationshipTemplate> relationship_templates = new ArrayList<>();
     public ArrayList<GroupDefinition> groups = new ArrayList<>();
     public ArrayList<PolicyDefinition> policies = new ArrayList<>();
@@ -131,7 +131,7 @@ public class TopologyTemplate extends TemplateValidator {
         keyNames.add(new KeyName("substitution_mappings", false, "N/A", "An optional declaration that exports the topology template as an implementation of a Node type. This also includes the mappings between the external Node Types named capabilities and requirements to existing implementations of those capabilities and requirements on Node templates declared within the topology template."));
     }
 
-    public TopologyTemplate(Map data) {
+    public TopologyTemplate(LinkedHashMap data) {
         super();
         this.data = data;
         keyNames.add(new KeyName("description", false, "description", "The optional description for the Topology Template."));
@@ -145,30 +145,42 @@ public class TopologyTemplate extends TemplateValidator {
 
 
         for (Object key : data.keySet()) {
-            System.out.println(key.toString() + "2");
-
             try {
                 Field field = this.getClass().getField(key.toString());
                 String simpleClassName = field.getType().getSimpleName();
-                System.out.println(simpleClassName);
+                Object o = data.get(key.toString());
                 if (simpleClassName.equals(String.class.getSimpleName())) {
                     field.set(this, data.get(key).toString());
-                    System.out.println(this.getClass().getField(key.toString()).get(this));
                 } else if (simpleClassName.equals(ArrayList.class.getSimpleName())) {
-                    System.out.println(((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0].getClass().getSimpleName());
-                    field.set(this, Class.forName(field.getType().getName()).newInstance());
-                    System.out.println(this.getClass().getField(key.toString()).get(this) + "!!!!!!!!!!!!!!");
+                    Class<?> cl = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+                    Constructor constructor = cl.getConstructor(o.getClass());
+                    System.out.println(key.toString() + "?????????");
+//                    data.get(key.toString().getClass().getSimpleName().equals(Map.class.getSimpleName()))
+                    o = constructor.newInstance(o.getClass().cast(data.get(key.toString())));
+                    field.getType().getMethod("add", Object.class).invoke(field.get(this), o);
                 } else {
-                    Class cl = Class.forName(field.getType().getName());
-                    Constructor constructor = cl.getConstructor(Map.class);
-                    Object o = constructor.newInstance((Map) data.get(key.toString()));
+                    Class<?> cl = Class.forName(field.getType().getName());
+                    Constructor constructor = cl.getConstructor(o.getClass());
+                    o = constructor.newInstance((Map) data.get(key.toString()));
                     field.set(this, o);
-                    System.out.println("ex");
-                    System.out.println(this.getClass().getField(key.toString()).get(this));
                 }
             } catch (Exception e) {
+                System.err.println(key.toString());
+                System.err.println(data.get(key.toString()));
                 e.printStackTrace();
             }
         }
+    }
+
+    @Override
+    public boolean isValid() {
+        if (!super.isValid()) {
+            System.err.println("Topology Template is not valid");
+            return false;
+        } else if (!node_templates.isValid()) {
+            System.err.println("Node Template is not valid");
+            return false;
+        }
+        return true;
     }
 }

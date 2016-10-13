@@ -4,14 +4,13 @@ import kr.ac.hanyang.model.KeyName;
 import kr.ac.hanyang.model.KeyNames;
 import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
 import kr.ac.hanyang.model.basemodel.validator.ValidatorModel;
-import kr.ac.hanyang.model.definition.ArtifactDefinition;
+import kr.ac.hanyang.model.collection.Imports;
 import kr.ac.hanyang.model.definition.ImportDefinition;
 import kr.ac.hanyang.model.definition.RepositoryDefinition;
 import kr.ac.hanyang.model.type.*;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
 import java.util.ArrayList;
 import java.util.Map;
@@ -167,7 +166,7 @@ public class ServiceTemplate extends TemplateValidator {
     public String description;
     public String dsl_definitions;
     public ArrayList<RepositoryDefinition> repositories = new ArrayList<>();
-    public ArrayList<ImportDefinition> imports = new ArrayList<>();
+    public Imports imports;
     public ArrayList<ArtifactType> artifact_types = new ArrayList<>();
     public ArrayList<DataType> data_types = new ArrayList<>();
     public ArrayList<CapabilityType> capability_types = new ArrayList<>();
@@ -217,41 +216,29 @@ public class ServiceTemplate extends TemplateValidator {
         keyNames.add(new KeyName("policy_types", false, "list of Policy Types", "This section contains a list of policy type definitions for use in the service template."));
         keyNames.add(new KeyName("topology_template", false, "Topology Template definition", "Defines the topology template of an application or service, consisting of node templates that represent the application’s or service’s components, as well as relationship templates representing relations between the components."));
 
-
         for (Object key : data.keySet()) {
-            System.out.println(key.toString() + "1");
-
             try {
                 Field field = this.getClass().getField(key.toString());
                 String simpleClassName = field.getType().getSimpleName();
-                System.out.println(simpleClassName);
+                Object o = data.get(key.toString());
                 if (simpleClassName.equals(String.class.getSimpleName())) {
                     field.set(this, data.get(key).toString());
-                    System.out.println(this.getClass().getField(key.toString()).get(this));
                 } else if (simpleClassName.equals(ArrayList.class.getSimpleName())) {
-                    System.out.println(((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0]);
-                    field.set(this, Class.forName(field.getType().getName()).newInstance());
-                    System.out.println(this.getClass().getField(key.toString()).get(this).getClass() + "!!!!!!!!!!!!!!");
-//                    data.get(key)
+                    Class<?> cl = (Class<?>) ((ParameterizedType) field.getGenericType()).getActualTypeArguments()[0];
+                    System.out.println(o.getClass());
+                    Constructor constructor = cl.getConstructor(o.getClass());
+                    o = constructor.newInstance(o.getClass().cast(data.get(key.toString())));
+                    field.getType().getMethod("add", Object.class).invoke(field.get(this), o);
                 } else {
-                    Class cl = Class.forName(field.getType().getName());
-                    Constructor constructor = cl.getConstructor(Map.class);
-                    Object o = constructor.newInstance((Map) data.get(key.toString()));
+                    Class<?> cl = Class.forName(field.getType().getName());
+                    Constructor constructor = cl.getConstructor(o.getClass());
+                    o = constructor.newInstance(o.getClass().cast(data.get(key.toString())));
                     field.set(this, o);
-                    System.out.println(this.getClass().getField(key.toString()).get(this));
                 }
-//                System.out.println(field.getName());
-
-//                Class cl = Class.forName((String) key);
-//                    System.out.println(cl.newInstance());
-//            System.out.println((((ParameterizedType)field.getGenericType()).getActualTypeArguments()[0]));
-//                Method method = this.getClass().getMethod("getKeyNames");
-//                System.out.println(this.getClass().getField("description").get(this));
-//                System.out.println(method.invoke(this));
-//
-//                Field field1 = this.getClass().getField("topology_template");
-//                System.out.println(field1.get(this));
             } catch (Exception e) {
+                System.err.println(key.toString());
+                System.err.println(data.get(key.toString()));
+
                 e.printStackTrace();
             }
         }
@@ -260,7 +247,7 @@ public class ServiceTemplate extends TemplateValidator {
     @Override
     public boolean isValid() {
 
-        if (!(super.isValid() && metadata.isValid())) {
+        if (!(super.isValid() && metadata != null && metadata.isValid())) {
             System.out.println("1");
             return false;
         }
@@ -273,11 +260,9 @@ public class ServiceTemplate extends TemplateValidator {
             }
         }
 
-        for (ImportDefinition importDefinition : imports) {
-            if (!importDefinition.isValid()) {
-                System.out.println("3");
-                return false;
-            }
+        if (imports!=null&&!imports.isValid()) {
+            System.out.println("3");
+            return false;
         }
 
         for (ArtifactType artifactType : artifact_types) {
@@ -356,7 +341,8 @@ public class ServiceTemplate extends TemplateValidator {
 
     private class Metadata extends ValidatorModel {
 
-        Metadata(){}
+        Metadata() {
+        }
 
         Metadata(Map data) {
             super();

@@ -6,6 +6,7 @@ import kr.ac.hanyang.model.basemodel.validator.CollectionValidator;
 import kr.ac.hanyang.model.definition.ParameterDefinition;
 
 import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -13,19 +14,19 @@ import java.util.Map;
  * outputs:
  * <parameter_def_list>
  */
-
+//list
 public class Outputs extends CollectionValidator {
     public ArrayList<ParameterDefinition> parameterDefinitions = new ArrayList<>();
 
     public Outputs() {
     }
 
-    public Outputs(Map data) {
+    public Outputs(LinkedHashMap data) {
         super();
         this.data = data;
 
-        for (Object o : data.values()) {
-            parameterDefinitions.add(new ParameterDefinition((Map) o));
+        for (Object o : data.keySet()) {
+            parameterDefinitions.add(new ParameterDefinition((Map) data.get(o),o.toString()));
         }
     }
 }

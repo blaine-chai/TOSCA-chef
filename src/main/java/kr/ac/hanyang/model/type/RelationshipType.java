@@ -79,7 +79,6 @@ public class RelationshipType extends TypeValidator {
 
     public RelationshipType() {
         super();
-        this.data = data;
         keyNames.add(new KeyName("derived_from", false, "string", "An optional parent Policy type name the Policy type derives from."));
         keyNames.add(new KeyName("version", false, "version", "An optional version for the Policy type definition."));
         keyNames.add(new KeyName("description", false, "description", "The optional description for the Policy type."));

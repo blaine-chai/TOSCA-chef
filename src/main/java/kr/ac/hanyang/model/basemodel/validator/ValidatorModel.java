@@ -27,10 +27,12 @@ public abstract class ValidatorModel extends LinkedHashMap {
     public boolean isValid() {
         // 1. 키가 전부 존재하는지 확인
         // 2. required인 키가 존재하는지 확인
-        // 3. type이 맞는지 확인
         return isValidKeyNames() && isRequiredValid();
 
     }
+
+
+
 
     public KeyNames getKeyNames() {
         return keyNames;

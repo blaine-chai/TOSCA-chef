@@ -8,6 +8,7 @@ import kr.ac.hanyang.model.basemodel.validator.AssignmentValidator;
 import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
 import kr.ac.hanyang.model.KeyNames;
 
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -30,14 +31,19 @@ import java.util.Map;
  */
 
 
-//TODO:
+//TODO: no kename
 public class AttributeAssignment extends AssignmentValidator {
+
+    public String attribute_name;
+    public String attribute_description;
+    public String attribute_value;
 
     public AttributeAssignment(){}
 
-    public AttributeAssignment(Map data) {
+    public AttributeAssignment(LinkedHashMap data) {
         super();
         this.data = data;
+
     }
 
 }

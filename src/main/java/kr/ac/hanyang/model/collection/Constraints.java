@@ -6,8 +6,12 @@ package kr.ac.hanyang.model.collection;
  */
 
 
+import kr.ac.hanyang.model.ConstraintClause;
 import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
 
+import java.lang.reflect.Constructor;
+import java.util.ArrayList;
+import java.util.LinkedHashMap;
 import java.util.Map;
 
 /**
@@ -25,13 +29,19 @@ import java.util.Map;
  * reqular_expression_value: represents a regular expression (string) value.
  */
 
-//TODO:
+//TODO: list
 public class Constraints extends TemplateValidator {
+
+    public ArrayList<ConstraintClause> constraintClauses = new ArrayList<>();
+
     public Constraints() {
     }
 
-    public Constraints(Map data) {
+    public Constraints(LinkedHashMap data) {
         super();
         this.data = data;
+        for (Object o : data.values()) {
+            constraintClauses.add(new ConstraintClause((Map) o));
+        }
     }
 }

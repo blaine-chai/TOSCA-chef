@@ -70,7 +70,7 @@ import java.util.Map;
 
  */
 
-//TODO: ArtifactType의 list로 구현하여 어떤 모양을 지정하는 방식으로 구현
+//TODO: list로 구현하여 어떤 모양을 지정하는 방식으로 구현
 public class ArtifactDefinition extends DefinitionValidator {
 
 

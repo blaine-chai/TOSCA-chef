@@ -4,6 +4,7 @@ import kr.ac.hanyang.model.basemodel.validator.TemplateValidator;
 import kr.ac.hanyang.model.KeyName;
 import kr.ac.hanyang.model.KeyNames;
 
+import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -40,9 +41,12 @@ import java.util.Map;
 
 public class CapabilityAssignment extends TemplateValidator {
 
+    public ArrayList<PropertyAssignment> properties = new ArrayList<>();
+    public ArrayList<AttributeAssignment> attributes = new ArrayList<>();
+
     public CapabilityAssignment(){}
 
-    public CapabilityAssignment(Map data) {
+    public CapabilityAssignment(LinkedHashMap data) {
         super();
         this.data = data;
         keyNames.add(new KeyName("properties", false, "list of property assignments", "An optional list of property definitions for the Capability definition."));

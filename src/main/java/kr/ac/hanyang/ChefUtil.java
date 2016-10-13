@@ -77,7 +77,6 @@ public class ChefUtil {
             ArrayList tmpList = ToscaParser.getNodeByKey((Map) parser.nodeTemplate.get(key), "type");
             if (!tmpList.isEmpty()) {
                 if (ToscaParser.isLeafNode(tmpList.get(0)) && !((String) tmpList.get(0)).contains("Compute")) {
-                    System.out.println(key+"!!!!!!!!!!!!!!!!!!!!");
                     createCookbook((String) key);
                 }
             } else {

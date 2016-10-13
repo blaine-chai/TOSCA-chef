@@ -3,6 +3,12 @@ package kr.ac.hanyang.model.assignment;
  * 3.7.2 Requirement assignment
  */
 
+import kr.ac.hanyang.model.KeyName;
+import kr.ac.hanyang.model.basemodel.validator.AssignmentValidator;
+
+import java.util.ArrayList;
+import java.util.Map;
+
 /**
  * Keyname
  * Requred
@@ -35,6 +41,9 @@ no
 node filter
  The optional filter definition that TOSCA orchestrators or providers would use to select a type-compatible target node that can fulfill the associated abstract requirement at runtime.
 
+
+
+ relationship
 type
 no
 string
@@ -86,6 +95,31 @@ The optional reserved keyname used to reference declared (named) interface defin
  * 
  * 
  */
-public class RequirementAssignment{
+public class RequirementAssignment extends AssignmentValidator{
+    public ArrayList<PropertyAssignment> properties = new ArrayList<>();
+    public ArrayList<AttributeAssignment> attributes = new ArrayList<>();
+    public ArrayList requirements;
+
+    public RequirementAssignment(){
+
+    }
+
+    public RequirementAssignment(ArrayList data) {
+        super();
+        this.requirements = data;
+        keyNames.add(new KeyName("capability", false, "string", "The optional reserved keyname used to provide the name of either a:\n" +
+                "\uF0B7 Capability definition within a target node template that can fulfill the requirement.\n" +
+                "\uF0B7 Capability type that the provider will use to select a type-compatible target node template to fulfill the requirement at runtime."));
+        keyNames.add(new KeyName("node", false, "string", "node\n" +
+                "no\n" +
+                "string\n" +
+                "   The optional reserved keyname used to identify the target node of a relationship. specifically, it is used to provide either a:\n" +
+                "\uF0B7 Node Template name that can fulfill the target node requirement.\n" +
+                "\uF0B7 Node type name that the provider will use to select a type-compatible node template to fulfill the requirement at runtime."));
+        keyNames.add(new KeyName("relationship", false, "string", "The optional reserved keyname used to provide the name of either a:\n" +
+                "\uF0B7 Relationship Template to use to relate the source node to the (capability in the) target node when fulfilling the requirement.\n" +
+                "\uF0B7 Relationship type that the provider will use to select a type-compatible relationship template to relate the source node to the target node at runtime."));
+        keyNames.add(new KeyName("node_filter", false, "string", "The optional filter definition that TOSCA orchestrators or providers would use to select a type-compatible target node that can fulfill the associated abstract requirement at runtime."));
+    }
 
 }

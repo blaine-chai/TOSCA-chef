@@ -36,18 +36,19 @@ import java.util.Map;
 
  * Grammar
  * <parameter_name>:
- type: <parameter_type>
- description: <parameter_description>
- value: <parameter_value> | { <parameter_value_expression> } required: <parameter_required>
- default: <parameter_default_value>
- status: <status_value>
- constraints:
- - <parameter_constraints>
- entry_schema:
- description: <entry_description>
- type: <entry_type>
- constraints:
- - <entry_constraints>
+     type: <parameter_type>
+     description: <parameter_description>
+     value: <parameter_value> | { <parameter_value_expression> }
+     required: <parameter_required>
+     default: <parameter_default_value>
+     status: <status_value>
+     constraints:
+       - <parameter_constraints>
+     entry_schema:
+       description: <entry_description>
+       type: <entry_type>
+       constraints:
+         - <entry_constraints>
 
  parameter_name: represents the required symbolic name of the parameter as a string.
  parameter_description: represents the optional description of the parameter.
@@ -65,16 +66,23 @@ import java.util.Map;
  */
 public class ParameterDefinition extends DefinitionValidator {
 
+    public String parameterName;
+
     public String type;
     public String value;
 
     public ParameterDefinition(){}
 
-    public ParameterDefinition(Map data) {
+    public ParameterDefinition(Map data, String parameterName) {
         super();
         this.data = data;
+        this.parameterName =parameterName;
         keyNames.add(new KeyName("type", false, "string", "The required data type for the parameter.Note: This keyname is required for a TOSCA Property definition, but is not for a TOSCA Parameter definition.", "None"));
         keyNames.add(new KeyName("value", false, "<any>", "The type-compatible value to assign to the named parameter. Parameter values may be provided as the result from the evaluation of an expression or a function.", "N/A"));
+        for(Object key:data.keySet()){
+            this.type=key.toString();
+            this.value = data.get(key).toString();
+        }
     }
 
 }

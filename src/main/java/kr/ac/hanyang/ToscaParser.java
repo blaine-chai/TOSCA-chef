@@ -2,6 +2,7 @@ package kr.ac.hanyang;
 
 import kr.ac.hanyang.model.Node;
 import kr.ac.hanyang.model.template.NodeTemplate;
+import kr.ac.hanyang.model.template.ServiceTemplate;
 import kr.ac.hanyang.model.template.TopologyTemplate;
 import kr.ac.hanyang.model.ToscaInputs;
 import org.yaml.snakeyaml.Yaml;
@@ -17,6 +18,7 @@ public class ToscaParser {
     public static ToscaInputs inputs = new ToscaInputs();
     public static NodeTemplate nodeTemplate = new NodeTemplate();
     public static Map map;
+    public static ServiceTemplate serviceTemplate;
 
     public ToscaParser(String filePath) {
         Yaml yaml = new Yaml();
@@ -24,9 +26,15 @@ public class ToscaParser {
             FileInputStream fileInputStream = new FileInputStream(filePath);
             map = (Map) yaml.load(fileInputStream);
 
+            serviceTemplate = new ServiceTemplate(map);
+
+            if(!serviceTemplate.isValid()){
+                return;
+            }
 
         } catch (IOException e) {
             e.printStackTrace();
+            return;
         }
         this.setNodeTemplate(map);
         this.sortByDependency();
@@ -49,7 +57,7 @@ public class ToscaParser {
                 setInputs((Map) node.get(subValueKey));
             }
         }
-        System.out.println(inputs);
+//        System.out.println(inputs);
     }
 
     @Deprecated
@@ -97,7 +105,7 @@ public class ToscaParser {
     }
 
     @Deprecated
-    public void makeTopologyTemplate(Map node) {
+    public void makeTopologyTemplate(LinkedHashMap node) {
         TopologyTemplate topologyTemplate = new TopologyTemplate(node);
         for (Object subValueKey : node.keySet()) {
             if (node.get(subValueKey) != null && LinkedHashMap.class.getName().equals(node.get(subValueKey).getClass().getName())) {
@@ -223,15 +231,14 @@ public class ToscaParser {
             for (int i = 0; i < dependencyList.size(); i++) {
                 if (dependencyList.get(i).dependencyList.isEmpty()) {
                     for (int j = 0; j < dependencyList.size(); j++) {
-                        System.out.println(dependencyList.get(i).name);
+//                        System.out.println(dependencyList.get(i).name);
                         dependencyList.get(j).dependencyList.remove(dependencyList.get(i).name);
-                        System.out.println(dependencyList.get(j).dependencyList);
+//                        System.out.println(dependencyList.get(j).dependencyList);
                     }
                     nodeNames.add(dependencyList.get(i).name);
                     dependencyList.remove(i);
                     i--;
                 }
-                System.out.println("nodeName: " + nodeNames);
             }
         } while (!dependencyList.isEmpty());
 
